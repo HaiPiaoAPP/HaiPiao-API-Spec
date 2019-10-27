@@ -1,0 +1,187 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "description": "HaiPiaoAPP API Auto Mocking",
+      "url": "https://virtserver.swaggerhub.com/HaiPiaoAPP/haipiao-api-alpha/1.0.0"
+    }
+  ],
+  "info": {
+    "description": "海漂APP后端API",
+    "version": "1.0.0",
+    "title": "海漂APP后端API",
+    "contact": {
+      "email": "haipiao.dev@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "Verified",
+      "description": "完成开发并已验证"
+    },
+    {
+      "name": "Developped",
+      "description": "已经完成开发"
+    },
+    {
+      "name": "Developing",
+      "description": "正在开发"
+    },
+    {
+      "name": "Todo",
+      "description": "未开发"
+    }
+  ],
+  "paths": {
+    "/security-code": {
+      "get": {
+        "tags": [
+          "Developped"
+        ],
+        "summary": "获取一个验证码（3.1）",
+        "description": "客户端为当前用户设备请求一个验证码，请求中需包含当前设备（手机）号码。服务器端返回一个6位验证码，一分钟内有效。\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "cell",
+            "description": "请求验证码的手机号",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "seccess": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "security_code": {
+                      "type": "string",
+                      "example": "067218"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/security-code/verification": {
+      "post": {
+        "tags": [
+          "Developped"
+        ],
+        "summary": "验证验证码",
+        "description": "客户端请求服务器验证 1. 用户登陆（\"login\"）或 2. 用户注册（\"registration\"）或 3. 用户修改手机号（\"update_cell\"），请求中需包含当前用户手机号码。服务器端需完成验证码验证，如果验证类型为1（用户注册）， 服务端需为请求中的手机号码创建一个新的账户， 如果账户已存在需返回相应错误码。服务器端需返回一个session token。\n",
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cell": {
+                    "type": "string",
+                    "example": 8888888
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "registration"
+                  },
+                  "code": {
+                    "type": "string",
+                    "example": "314489"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "seccess": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "seesion_token": {
+                          "type": "string",
+                          "example": "euMA3jBRShPn/K935B9e0A==:T4p4tBPdDrgD70UbbgGNoQ=="
+                        },
+                        "issued_time": {
+                          "type": "number",
+                          "example": 1571641196070
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "Error": {
+        "description": "请求失败",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "seccess": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "error_code": {
+                      "type": "string",
+                      "example": "INTERNAL_SERVER_ERROR"
+                    },
+                    "error_message": {
+                      "type": "string",
+                      "example": "vender service denied request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
