@@ -1,0 +1,19 @@
+steps:
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f=deploy/app/']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=asia-east2-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=hp-cluster'
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['scale', '--replica=0', '-f=deploy/app/deployment.yaml']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=asia-east2-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=hp-cluster'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['scale', '--replica=1', '-f=deploy/app/deployment.yaml']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=asia-east2-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=hp-cluster'
+
+timeout: 600s

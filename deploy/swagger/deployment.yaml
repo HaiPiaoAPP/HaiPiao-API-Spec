@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger
+  namespace: swagger
+  labels:
+    app: swagger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swagger
+  template:
+    metadata:
+      labels:
+        app: swagger
+    spec:
+      initContainers:
+        - name: git
+          image: alpine/git
+          command: ['/bin/sh']
+          args:
+            - -c
+            - "git clone https://github.com/HaiPiaoAPP/api-spec.git /data"
+          volumeMounts:
+            - name: gitrepo
+              mountPath: /data
+      containers:
+        - name: swagger
+          image: haipiaodev/swagger-api-mock:v1.0.0
+          ports:
+            - name: swagger
+              containerPort: 8000
+          volumeMounts:
+            - name: gitrepo
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: gitrepo
+          emptyDir: {}
