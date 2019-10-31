@@ -75,7 +75,10 @@
             }
           },
           "default": {
-            "$ref": "#/definitions/ErrorInfo"
+            "description": "请求失败",
+            "schema": {
+              "$ref": "#/definitions/ErrorInfo"
+            }
           }
         }
       }
@@ -97,7 +100,7 @@
           {
             "in": "body",
             "name": "验证码信息",
-            "description": "Optional description in *Markdown*",
+            "description": "验证码信息包括：1. 请求验证码的手机号（`cell`）2. 验证码类型（`type`） 3. 验证码 (`code`)",
             "required": true,
             "schema": {
               "type": "object",
@@ -145,7 +148,360 @@
             }
           },
           "default": {
-            "$ref": "#/definitions/ErrorInfo"
+            "description": "请求失败",
+            "schema": {
+              "$ref": "#/definitions/ErrorInfo"
+            }
+          }
+        }
+      }
+    },
+    "/image/updaload": {
+      "post": {
+        "tags": [
+          "Todo"
+        ],
+        "summary": "创建图片链接",
+        "description": "先调用阿里云的OSS服务上传图片，获取返回的url，再调用该API创建一个图片链接。图片类型：1. 文章中图片（`in_article`）2. 头像图片 （`profile`）。 \n",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "图片url信息",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "image_type",
+                "image_url"
+              ],
+              "properties": {
+                "image_type": {
+                  "type": "string",
+                  "example": "profile"
+                },
+                "image_url": {
+                  "type": "string",
+                  "format": "url",
+                  "example": "aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/myphoto.jpg"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "image_id": {
+                  "type": "integer",
+                  "example": 1234
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "请求失败",
+            "schema": {
+              "$ref": "#/definitions/ErrorInfo"
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "Todo"
+        ],
+        "summary": "创建一个新用户",
+        "description": "创建一个新用户。用于用户注册流程中。",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Cookie",
+            "description": "必须包含`seesion_token`（临时session token。当完成验证码验证后，服务器返回一个临时session token）。该token在此次使用后即失效，客户端再后续的请求中应该在`Cookie`中加入该次请求响应中返回的`seesion_token`字段",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "用户信息",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "name",
+                "gender",
+                "birthday",
+                "cell"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "王小明"
+                },
+                "gender": {
+                  "type": "string",
+                  "enum": [
+                    "F",
+                    "M",
+                    "U"
+                  ]
+                },
+                "birthday": {
+                  "type": "string",
+                  "example": "1992/01/31"
+                },
+                "cell": {
+                  "type": "string",
+                  "example": 8888888
+                },
+                "profile_image_url": {
+                  "type": "string",
+                  "format": "url",
+                  "example": "aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/myphoto.jpg"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "创建成功",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success"
+              ],
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "session_token"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "example": 100001
+                    },
+                    "session_token": {
+                      "type": "string",
+                      "example": "euMA3jBRShPn/K935B9e0A==:T4p4tBPdDrgD70UbbgGNoQ=="
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "请求失败",
+            "schema": {
+              "$ref": "#/definitions/ErrorInfo"
+            }
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "tags": [
+          "Todo"
+        ],
+        "summary": "获取\"分类\"列表",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "hot",
+              "all",
+              "misc"
+            ]
+          },
+          {
+            "in": "header",
+            "name": "Cookie",
+            "description": "包含`seesion_token`。如果缺失，则为`visitor mode`(游客模式)",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "创建成功",
+            "schema": {
+              "type": "object",
+              "required": [
+                "success",
+                "data"
+              ],
+              "properties": {
+                "sucess": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "hot": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 100012
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "学校"
+                          },
+                          "cover_image_url": {
+                            "type": "string",
+                            "format": "url",
+                            "example": "aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/school.jpg"
+                          }
+                        }
+                      }
+                    },
+                    "all": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 100012
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "工作"
+                          },
+                          "cover_image_url": {
+                            "type": "string",
+                            "format": "url",
+                            "example": "aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/work.jpg"
+                          }
+                        }
+                      }
+                    },
+                    "misc": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 100012
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "旅游"
+                          },
+                          "cover_image_url": {
+                            "type": "string",
+                            "format": "url",
+                            "example": "aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/travel.jpg"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "请求失败",
+            "schema": {
+              "$ref": "#/definitions/ErrorInfo"
+            }
+          }
+        }
+      }
+    },
+    "/user/category": {
+      "post": {
+        "tags": [
+          "Todo"
+        ],
+        "summary": "添加用户关注的\"分类\"",
+        "description": "添加用户关注的\"分类\"。每个分类由一个integer类型的id唯一识别。",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Cookie",
+            "required": true,
+            "description": "必须包含`seesion_token`。不支持`visitor mode`(游客模式)",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "分类列表",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "categories"
+              ],
+              "properties": {
+                "categories": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "example": [
+                      100001,
+                      200001,
+                      300001
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "请求成功",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "请求失败",
+            "schema": {
+              "$ref": "#/definitions/ErrorInfo"
+            }
           }
         }
       }
