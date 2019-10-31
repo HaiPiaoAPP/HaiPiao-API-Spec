@@ -26,11 +26,23 @@ spec:
             - name: gitrepo
               mountPath: /data
       containers:
-        - name: swagger
+        - name: swagger-mock-server
           image: haipiaodev/swagger-api-mock:v1.0.0
           ports:
             - name: swagger
               containerPort: 8000
+          volumeMounts:
+            - name: gitrepo
+              mountPath: /data
+              readOnly: true
+        - name: swagger-ui
+          image: swaggerapi/swagger-ui
+          env:
+            - name: SWAGGER_JSON
+              value: /data/swagger.json
+          ports:
+            - name: swagger-ui
+              containerPort: 8080
           volumeMounts:
             - name: gitrepo
               mountPath: /data
