@@ -36,7 +36,7 @@
     }
   ],
   "paths": {
-    "/security-code": {
+    "/security-code/new": {
       "get": {
         "tags": [
           "Developped"
