@@ -217,7 +217,7 @@
         }
       }
     },
-    "/user": {
+    "/user/new": {
       "post": {
         "tags": [
           "Todo"
