@@ -145,7 +145,7 @@ paths:
                   example: profile
                 image_url:
                   type: string
-                  format: url
+                  format: uri
                   example: aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/myphoto.jpg
         required: true
       responses:
@@ -216,7 +216,7 @@ paths:
                   example: '8888888'
                 profile_image_url:
                   type: string
-                  format: url
+                  format: uri
                   example: aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/myphoto.jpg
         required: true
       responses:
@@ -308,7 +308,7 @@ paths:
                               example: 学校
                             cover_image_url:
                               type: string
-                              format: url
+                              format: uri
                               example: aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/school.jpg
                       all:
                         type: array
@@ -323,7 +323,7 @@ paths:
                               example: 工作
                             cover_image_url:
                               type: string
-                              format: url
+                              format: uri
                               example: aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/work.jpg
                       misc:
                         type: array
@@ -338,7 +338,7 @@ paths:
                               example: 旅游
                             cover_image_url:
                               type: string
-                              format: url
+                              format: uri
                               example: aliyun-abc.oss-cn-hangzhou.aliyuncs.com/abc/travel.jpg
               examples:
                 success-all:
