@@ -116,7 +116,7 @@ paths:
                     issued_time: 1571641196070
                 invalid security code:
                   value:
-                    status_code: UNAUTHORIZAED
+                    status_code: UNAUTHORIZED
                     error_message: invalid security code
                 internal server error:
                   value:
@@ -124,6 +124,74 @@ paths:
                     error_message: Internal server error.
         default:
           description: 任何非200状态码即为请求失败，按照INTERNAL_SERVER_ERROR处理
+  /image/getsecuritytoken:
+    get:
+      tags:
+        - Todo
+      summary: 获取上传图片的security token
+      description: 获取将图片上传OSS的secuiriy token。Secuiry token有效期为30分钟。
+      parameters:
+        - name: Cookie
+          in: header
+          description: 必须包含`seesion_token`。不支持`visitor mode`(游客模式)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 请求成功
+          content:
+            application/json:
+              schema:
+                required:
+                  - status_code
+                  - endpoint
+                  - access_key_id
+                  - access_key_secret
+                  - security_token
+                  - expire_time
+                type: object
+                properties:
+                  status_code:
+                    type: string
+                  error_message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      endpoint:
+                        type: string
+                        description: 阿里云OSS服务的endpoint
+                      access_key_id:
+                        type: string
+                        description: 阿里云OSS服务的AccessKeyId
+                      access_key_secret:
+                        type: string
+                        description: 阿里云OSS服务的AccessKeySecret
+                      security_token:
+                        type: string
+                        description: 阿里云OSS服务的SecurityToken
+                      expire_time:
+                        type: string
+                        description: Security token的过期时间。以epoch time开始计算，精度为秒。
+              examples:
+                success:
+                  value:
+                    status_code: SUCCESS
+                    data:
+                      endpoint: http://oss-cn-hangzhou.aliyuncs.com
+                      access_key_id: tempaccesskey
+                      access_key_secret: someaccesskeysecret
+                      security_token: sometoken
+                      expire_time: 1573113573
+                unauthorized:
+                  value:
+                    status_code: UNAUTHORIZED
+                    error_message: Need to log in
+                internal server error:
+                  value:
+                    status_code: INTERNAL_SERVER_ERROR
+                    error_message: Internal server error
   /image/updaload:
     post:
       tags:
@@ -131,6 +199,13 @@ paths:
       summary: 创建图片链接
       description: |
         先调用阿里云的OSS服务上传图片，获取返回的url，再调用该API创建一个图片链接。图片类型：1. 文章中图片（`in_article`）2. 头像图片 （`profile`）。
+      parameters:
+        - name: Cookie
+          in: header
+          description: 必须包含`seesion_token`。不支持`visitor mode`(游客模式)
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -424,6 +499,10 @@ paths:
                 success:
                   value:
                     status_code: SUCCESS
+                unauthorized:
+                  value:
+                    status_code: UNAUTHORIZED
+                    error_message: Need to log in
                 bad request:
                   value:
                     status_code: BAD_REQUEST
