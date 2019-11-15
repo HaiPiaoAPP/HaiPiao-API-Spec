@@ -20,7 +20,7 @@ tags:
   - name: Todo
     description: 未开发
 paths:
-  /security-code/new:
+  /security-code:
     get:
       tags:
         - Developped
@@ -250,7 +250,7 @@ paths:
                     error_message: Internal server error.
         default:
           description: 任何非200状态码即为请求失败，按照INTERNAL_SERVER_ERROR
-  /user/new:
+  /user:
     post:
       tags:
         - Todo
